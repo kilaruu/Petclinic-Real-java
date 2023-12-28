@@ -1,0 +1,25 @@
+pipeline {
+    agent any    
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/kilaruu/banking-application.git' 
+            }
+        }
+
+        stage('maven build') {
+            steps {
+                    sh 'mvn clean install'
+                }
+        }
+
+        stage('Deploy to Tomcat') {
+            steps {
+                script {
+                    sh 'scp target/*.war $CATALINA_HOME/webapps/'
+                    echo 'Application deployed successfully!'
+                }
+            }
+        }
+    }
+}
